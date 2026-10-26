@@ -77,6 +77,7 @@ function student_search_results(array $data): ?array {
 }
 
 if ($action === 'register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_staff();
     if (STUDENT_RECORDS_API_KEY === '') fail('Student registration is not configured. Ask the site administrator to set STUDENT_RECORDS_API_KEY.', 503);
     $d = body();
     $fields = student_fields($d);
