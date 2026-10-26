@@ -105,7 +105,6 @@ footer b{color:#fff;font-family:var(--serif);font-size:15px}
   <a id="newsTab" href="#news" role="tab" aria-controls="news" aria-selected="true">News</a>
   <a id="servicesTab" href="#services" role="tab" aria-controls="services" aria-selected="false" tabindex="-1">Services</a>
   <a id="programsTab" href="#programs" role="tab" aria-controls="programs" aria-selected="false" tabindex="-1">Courses Offered</a>
-  <a id="registrarTab" href="#registrar" role="tab" aria-controls="registrar" aria-selected="false" tabindex="-1">Registrar</a>
 </div></nav>
 
 <section class="enroll" id="registrarCallout"><div class="wrap">
@@ -121,6 +120,15 @@ footer b{color:#fff;font-family:var(--serif);font-size:15px}
 <div class="wrap">
   <div class="rule"><h3>Campus News</h3></div>
   <div id="newsList"></div>
+  <section class="box" id="studentLookup" hidden style="margin-top:18px">
+    <h4>Staff: look up students</h4>
+    <form id="studentSearchForm">
+      <div class="field"><label for="studentSearchQuery">Name or student number</label><input id="studentSearchQuery" minlength="2" maxlength="100" required></div>
+      <button class="btn btn-navy" type="submit">Search</button>
+      <p class="student-status" id="studentSearchStatus" role="status" aria-live="polite"></p>
+    </form>
+    <div id="studentSearchResults"></div>
+  </section>
 </div></section>
 
 <section class="block" id="services" role="tabpanel" aria-labelledby="servicesTab" tabindex="0" hidden><div class="wrap">
@@ -146,20 +154,6 @@ footer b{color:#fff;font-family:var(--serif);font-size:15px}
   </div>
 </div></section>
 
-<section class="block" id="registrar" role="tabpanel" aria-labelledby="registrarTab" tabindex="0" hidden><div class="wrap">
-  <div class="rule"><h3>Registrar</h3></div>
-  <p>Student records and Registrar services are available through the Admin Hub.</p>
-  <a class="btn btn-navy" href="https://it-department-hub.onrender.com">Open Registrar / Admin Hub &rarr;</a>
-  <section class="box" id="studentLookup" hidden style="margin-top:18px">
-    <h4>Staff: look up students</h4>
-    <form id="studentSearchForm">
-      <div class="field"><label for="studentSearchQuery">Name or student number</label><input id="studentSearchQuery" minlength="2" maxlength="100" required></div>
-      <button class="btn btn-navy" type="submit">Search</button>
-      <p class="student-status" id="studentSearchStatus" role="status" aria-live="polite"></p>
-    </form>
-    <div id="studentSearchResults"></div>
-  </section>
-</div></section>
 
 <footer><div class="wrap">
   <b>Colegio de San Francisco Javier of Rizal, Zamboanga del Norte, Inc.</b><br>
@@ -190,10 +184,6 @@ footer b{color:#fff;font-family:var(--serif);font-size:15px}
 </div></div>
 
 <script>
-/* ===== SETTINGS — edit this ===== */
-const REGISTRAR_URL = 'https://it-department-hub.onrender.com';
-/* ================================ */
-
 const API_BASE = window.ADMISSION_API_BASE || new URL('./backend', document.baseURI).href.replace(/\/$/, '');
 const SESSION_KEY = 'csfj_news_token_v1';
 const $ = id => document.getElementById(id);
@@ -355,7 +345,6 @@ document.querySelectorAll('[role="tab"]').forEach(tab => {
     next.focus();
   });
 });
-$('registrarBtn').href = REGISTRAR_URL;
 $('today').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
 loadNews();
 </script>
