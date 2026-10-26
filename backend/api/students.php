@@ -51,7 +51,7 @@ function current_student(string $studentId): array {
     if ($token === '') fail('Student sign-in required.', 401);
     $response = external_json_request(
         ADMIN_HUB_API_URL,
-        '/hub/students/' . rawurlencode($studentId) . '/full',
+        '/hub/students/' . rawurlencode($studentId),
         'GET',
         ['Authorization: Bearer ' . $token]
     );
