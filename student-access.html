@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSFJ Rizal — Student Sign Up / Sign In</title>
+<style>
+:root{--navy:#122A50;--navy-2:#0B1D3A;--gold:#C79A2E;--cream:#F7F4EC;--ink:#1B2027;--muted:#5B6270;--border:#E4DFD0;--red:#B23A34;--green:#2F6B45}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:'IBM Plex Sans',-apple-system,'Segoe UI',sans-serif;line-height:1.5}
+header{background:var(--navy-2);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+header b{font-family:Georgia,serif;font-size:18px}
+header a{color:#E7C765;font-size:14px}
+main{max-width:520px;margin:28px auto;padding:0 16px}
+.card{background:#fff;border:1px solid var(--border);border-top:4px solid var(--gold);border-radius:6px;padding:24px}
+.tabs{display:flex;gap:8px;margin-bottom:18px}
+.tabs button{flex:1;padding:10px;border:1px solid var(--border);background:var(--cream);font:600 14px inherit;cursor:pointer;border-radius:4px}
+.tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+h2{font-family:Georgia,serif;color:var(--navy);margin:0 0 14px}
+label{display:block;font-size:13px;font-weight:600;margin:12px 0 4px}
+input,select{width:100%;padding:10px;border:1px solid var(--border);border-radius:4px;font:inherit}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.go{margin-top:18px;width:100%;padding:12px;background:var(--gold);color:var(--navy-2);border:0;border-radius:4px;font:600 15px inherit;cursor:pointer}
+.go:disabled{opacity:.6;cursor:wait}
+.msg{margin-top:14px;padding:10px 12px;border-radius:4px;font-size:14px;display:none}
+.msg.err{display:block;background:#fbeaea;color:var(--red)}
+.msg.ok{display:block;background:#e8f4ec;color:var(--green)}
+.msg.wait{display:block;background:#fff7dd;color:#6b5410}
+.sid{font:700 26px Georgia,serif;color:var(--navy);letter-spacing:.05em}
+.hide{display:none}
+</style>
+</head>
+<body>
+<header><b>Colegio de San Francisco Javier of Rizal</b><a href="admission_portal.html">&larr; Back to Admission Portal</a></header>
+<main><div class="card">
+  <div class="tabs">
+    <button id="tabUp" class="on" type="button">Sign up</button>
+    <button id="tabIn" type="button">Sign in</button>
+  </div>
+
+  <!-- SIGN UP -->
+  <form id="up" autocomplete="off">
+    <h2>Create your student account</h2>
+    <label for="fn">Full name</label><input id="fn" required>
+    <label for="em">Email</label><input id="em" type="email" required>
+    <label for="cn">Contact number</label><input id="cn" inputmode="tel" required>
+    <label for="ad">Address</label><input id="ad" required>
+    <div class="two">
+      <div><label for="yl">Year level</label>
+        <select id="yl"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+      <div><label for="sc">Section</label><input id="sc" value="A" maxlength="10"></div>
+    </div>
+    <label for="pw">Password (at least 6 characters)</label><input id="pw" type="password" minlength="6" required autocomplete="new-password">
+    <button class="go" id="upGo" type="submit">Sign up</button>
+    <div class="msg" id="upMsg"></div>
+  </form>
+
+  <!-- SIGN IN -->
+  <form id="in" class="hide">
+    <h2>Student sign in</h2>
+    <label for="si">Student number</label><input id="si" placeholder="2026-00000" required>
+    <label for="sp">Password</label><input id="sp" type="password" required autocomplete="current-password">
+    <button class="go" id="inGo" type="submit">Sign in</button>
+    <div class="msg" id="inMsg"></div>
+  </form>
+</div></main>
+
+<script>
+/* ===== SETTINGS ===== */
+// Group 3's ready-made User Dashboard page. Ask Lander for the link and paste it here.
+const DASHBOARD_URL = 'https://it-department-hub.onrender.com/dashboard';
+/* ==================== */
+
+const API = new URL('./backend', document.baseURI).href.replace(/\/$/, '');
+const $ = id => document.getElementById(id);
+
+function show(el, cls, text){ el.className = 'msg ' + cls; el.innerHTML = text; }
+function pick(which){
+  $('up').classList.toggle('hide', which !== 'up');
+  $('in').classList.toggle('hide', which !== 'in');
+  $('tabUp').classList.toggle('on', which === 'up');
+  $('tabIn').classList.toggle('on', which === 'in');
+}
+$('tabUp').onclick = () => pick('up');
+$('tabIn').onclick = () => pick('in');
+
+async function post(path, data){
+  let r;
+  try{
+    r = await fetch(API + path, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)});
+  }catch(e){ throw new Error('Cannot reach the server. Is PHP running?'); }
+  const j = await r.json().catch(() => ({}));
+  if(!r.ok) throw new Error(j.error || 'Something went wrong (' + r.status + ').');
+  return j;
+}
+const WAIT = 'Please wait… the school server can take up to a minute to wake up.';
+
+$('up').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('upGo'), box = $('upMsg');
+  btn.disabled = true; show(box, 'wait', WAIT);
+  try{
+    const j = await post('/register', {
+      full_name:$('fn').value.trim(), email:$('em').value.trim(), contact_number:$('cn').value.trim(),
+      address:$('ad').value.trim(), year_level:Number($('yl').value), section:$('sc').value.trim() || 'A', password:$('pw').value
+    });
+    show(box, 'ok', 'Account created! Your student number is:<div class="sid">' + j.student_id + '</div>Write it down — you need it to sign in.');
+    $('si').value = j.student_id; $('pw').value = '';
+  }catch(err){ show(box, 'err', err.message); }
+  btn.disabled = false;
+});
+
+$('in').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('inGo'), box = $('inMsg');
+  btn.disabled = true; show(box, 'wait', WAIT);
+  try{
+    const j = await post('/student-login', {student_id:$('si').value.trim(), password:$('sp').value});
+    try{ sessionStorage.setItem('csfj_student_token', j.token); sessionStorage.setItem('csfj_student_id', j.student_id); }catch(x){}
+    if(DASHBOARD_URL){ location.href = DASHBOARD_URL; return; }
+    show(box, 'ok', 'Signed in as <b>' + j.student_id + '</b>. (Add the User Dashboard link in DASHBOARD_URL to go there automatically.)');
+  }catch(err){ show(box, 'err', err.message); }
+  btn.disabled = false;
+});
+</script>
+</body>
+</html>

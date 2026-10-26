@@ -1,0 +1,6 @@
+.git
+.env
+.env.*
+backend/admission_portal.sqlite
+backend/admission_portal.sqlite-*
+backend/data/

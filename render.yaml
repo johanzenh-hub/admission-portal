@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: admission-portal
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /backend/api/db-check
+    envVars:
+      - key: DB_DRIVER
+        value: sqlite
+      - key: DB_PATH
+        value: /tmp/admission_portal.sqlite
+      - key: APP_SECRET
+        generateValue: true
+      - key: INITIAL_ADMIN_USERNAME
+        sync: false
+      - key: INITIAL_ADMIN_PASSWORD
+        sync: false
+      - key: STUDENT_RECORDS_API_KEY
+        sync: false
