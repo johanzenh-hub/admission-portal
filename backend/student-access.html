@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSFJ Rizal — Student Sign In</title>
+<style>
+:root{--navy:#122A50;--navy-2:#0B1D3A;--gold:#C79A2E;--cream:#F7F4EC;--ink:#1B2027;--muted:#5B6270;--border:#E4DFD0;--red:#B23A34;--green:#2F6B45}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:'IBM Plex Sans',-apple-system,'Segoe UI',sans-serif;line-height:1.5}
+header{background:var(--navy-2);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+header b{font-family:Georgia,serif;font-size:18px}
+header a{color:#E7C765;font-size:14px}
+main{max-width:520px;margin:28px auto;padding:0 16px}
+.card{background:#fff;border:1px solid var(--border);border-top:4px solid var(--gold);border-radius:6px;padding:24px}
+h2{font-family:Georgia,serif;color:var(--navy);margin:0 0 6px}
+.note{color:var(--muted);font-size:14px;margin:0 0 8px}
+label{display:block;font-size:13px;font-weight:600;margin:12px 0 4px}
+input{width:100%;padding:10px;border:1px solid var(--border);border-radius:4px;font:inherit}
+.go{margin-top:18px;width:100%;padding:12px;background:var(--gold);color:var(--navy-2);border:0;border-radius:4px;font:600 15px inherit;cursor:pointer}
+.go:disabled{opacity:.6;cursor:wait}
+.msg{margin-top:14px;padding:10px 12px;border-radius:4px;font-size:14px;display:none}
+.msg.err{display:block;background:#fbeaea;color:var(--red)}
+.msg.ok{display:block;background:#e8f4ec;color:var(--green)}
+.msg.wait{display:block;background:#fff7dd;color:#6b5410}
+</style>
+</head>
+<body>
+<header><b>Colegio de San Francisco Javier of Rizal</b><a href="admission_portal.html">&larr; Back to Admission Portal</a></header>
+<main><div class="card">
+  <form id="in">
+    <h2>Student sign in</h2>
+    <p class="note">New student accounts are created by the Registrar.</p>
+    <label for="si">Student number</label><input id="si" placeholder="2026-00000" required>
+    <label for="sp">Password</label><input id="sp" type="password" required autocomplete="current-password">
+    <button class="go" id="inGo" type="submit">Sign in</button>
+    <div class="msg" id="inMsg"></div>
+  </form>
+</div></main>
+
+<script>
+/* ===== SETTINGS ===== */
+// Group 3's User Dashboard. Signed-in students are sent here (it asks for the password again).
+const DASHBOARD_URL = 'https://it-department-hub.onrender.com/dashboard';
+/* ==================== */
+
+const API = new URL('./backend', document.baseURI).href.replace(/\/$/, '');
+const $ = id => document.getElementById(id);
+
+function show(el, cls, text){ el.className = 'msg ' + cls; el.innerHTML = text; }
+
+async function post(path, data){
+  let r;
+  try{
+    r = await fetch(API + path, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)});
+  }catch(e){ throw new Error('Cannot reach the server. Is PHP running?'); }
+  const j = await r.json().catch(() => ({}));
+  if(!r.ok) throw new Error(j.error || 'Something went wrong (' + r.status + ').');
+  return j;
+}
+const WAIT = 'Please wait… the school server can take up to a minute to wake up.';
+
+$('in').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('inGo'), box = $('inMsg');
+  btn.disabled = true; show(box, 'wait', WAIT);
+  try{
+    const j = await post('/student-login', {student_id:$('si').value.trim(), password:$('sp').value});
+    try{ sessionStorage.setItem('csfj_student_token', j.token); sessionStorage.setItem('csfj_student_id', j.student_id); }catch(x){}
+    if(DASHBOARD_URL){ location.href = DASHBOARD_URL; return; }
+    show(box, 'ok', 'Signed in as <b>' + j.student_id + '</b>.');
+  }catch(err){ show(box, 'err', err.message); }
+  btn.disabled = false;
+});
+</script>
+</body>
+</html>

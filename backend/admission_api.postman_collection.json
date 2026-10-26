@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "CSFJ Admission Portal API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base", "value": "https://your-portal-host.example/backend" },
+    { "key": "token", "value": "" },
+    { "key": "staff_username", "value": "" },
+    { "key": "staff_password", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Staff login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base}}/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"username\":\"{{staff_username}}\",\"password\":\"{{staff_password}}\"}"
+        }
+      }
+    },
+    {
+      "name": "List news (public)",
+      "request": { "method": "GET", "url": "{{base}}/news" }
+    },
+    {
+      "name": "Post news (staff)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{base}}/news",
+        "body": { "mode": "raw", "raw": "{\"title\":\"Sample\",\"category\":\"News\",\"body\":\"Story text\"}" }
+      }
+    },
+    {
+      "name": "Edit news (staff)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{base}}/news/1",
+        "body": { "mode": "raw", "raw": "{\"title\":\"Edited\",\"category\":\"News\",\"body\":\"New text\"}" }
+      }
+    },
+    {
+      "name": "Delete news (staff)",
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{base}}/news/1"
+      }
+    }
+  ]
+}
