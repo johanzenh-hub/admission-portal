@@ -121,6 +121,21 @@ footer b{color:#fff;font-family:var(--serif);font-size:15px}
   <div class="rule"><h3>Campus News</h3></div>
   <div id="newsList"></div>
   <section class="box" id="studentLookup" hidden style="margin-top:18px">
+    <h4>Create student record</h4>
+    <p>Staff-only. Student records are saved to the Student Records system.</p>
+    <form id="studentCreateForm">
+      <div class="field"><label for="createStudentName">Full name</label><input id="createStudentName" name="full_name" autocomplete="name" maxlength="120" required></div>
+      <div class="field"><label for="createStudentEmail">Email</label><input id="createStudentEmail" name="email" type="email" autocomplete="email" maxlength="254" required></div>
+      <div class="field"><label for="createStudentContact">Contact number</label><input id="createStudentContact" name="contact_number" autocomplete="tel" maxlength="40"></div>
+      <div class="field"><label for="createStudentAddress">Address</label><input id="createStudentAddress" name="address" autocomplete="street-address" maxlength="500"></div>
+      <div class="field"><label for="createStudentYear">Year level</label><select id="createStudentYear" name="year_level" required><option value="">Choose a year</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select></div>
+      <div class="field"><label for="createStudentSection">Section</label><input id="createStudentSection" name="section" maxlength="40"></div>
+      <div class="field"><label for="createStudentStatus">Enrollment status</label><select id="createStudentStatus" name="enrollment_status" required><option value="not-enrolled">Not enrolled</option><option value="enrolled">Enrolled</option><option value="irregular">Irregular</option></select></div>
+      <div class="field"><label for="createStudentPassword">Temporary password</label><input id="createStudentPassword" name="password" type="password" minlength="6" autocomplete="new-password" required></div>
+      <p class="student-status" id="studentCreateStatus" role="status" aria-live="polite"></p>
+      <button class="btn btn-navy" type="submit">Create student</button>
+    </form>
+    <hr>
     <h4>Staff: look up students</h4>
     <form id="studentSearchForm">
       <div class="field"><label for="studentSearchQuery">Name or student number</label><input id="studentSearchQuery" minlength="2" maxlength="100" required></div>
@@ -300,6 +315,27 @@ function studentStatus(id, message, type=''){
   el.textContent = message;
   el.className = 'student-status' + (type ? ' ' + type : '');
 }
+$('studentCreateForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const form = event.currentTarget, button = form.querySelector('button[type="submit"]');
+  const status = $('studentCreateStatus');
+  button.disabled = true;
+  status.textContent = 'Creating student record…';
+  status.className = 'student-status';
+  const fields = Object.fromEntries(new FormData(form).entries());
+  fields.year_level = Number(fields.year_level);
+  try{
+    const result = await api('/students/register', {method:'POST', body:JSON.stringify(fields)});
+    form.reset();
+    status.textContent = 'Student created. Student number: ' + result.student_id;
+  }catch(error){
+    status.textContent = error.message;
+    status.className = 'student-status error';
+  }finally{
+    button.disabled = false;
+  }
+});
+
 $('studentSearchForm').addEventListener('submit', async event => {
   event.preventDefault();
   const query = $('studentSearchQuery').value.trim();
