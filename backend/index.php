@@ -38,5 +38,6 @@ try {
         fail('Not found', 404);
     }
 } catch (PDOException $e) {
+    error_log('Database request failed: ' . $e->getMessage());
     fail('Database connection failed. Check DB_DRIVER and the database path or MySQL settings, confirm the matching schema was imported, and verify that PHP has the required PDO driver.', 500);
 }
