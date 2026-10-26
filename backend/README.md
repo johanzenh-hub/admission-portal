@@ -35,10 +35,15 @@ php -d extension=pdo_sqlite -d extension=sqlite3 -S 127.0.0.1:8000 backend\index
 Open `http://127.0.0.1:8000/admission_portal.html`. The first staff login creates the account if `admin_accounts` is empty. Keep `APP_SECRET` and the staff password private; set a persistent random `APP_SECRET` in the host environment for any deployed site.
 
 ## Registrar link
-The Registrar button opens the built-in Registrar tab by default. Edit `REGISTRAR_URL` in the script in `admission_portal.html` only if the school wants the button to point to a separate Registrar system.
+The **Go to Registrar** button opens the Registrar service at `https://it-department-hub.onrender.com`.
+
+## IT Hub and Student Records connection
+The IT Hub checks each registered system at `GET /api/db-check`. The root `.htaccess` forwards that path to the backend health handler; `/backend/api/db-check` remains the Render health check. Send the portal's connection details to the IT Hub administrator so they can register the `web-portal` system in the Hub.
+
+Student login and staff search go through the IT Hub. Student profile lookup uses `/hub/students/{student_id}`. Student creation and profile updates go directly to the Student Records API using the private `STUDENT_RECORDS_API_KEY`; configure it in the portal's Render environment, never in the browser or repository.
 
 ## Student registration and self-service
-The Registrar tab can register students, let them sign in, and allow a signed-in student to update only their own profile. Student credentials and profile requests are sent through the PHP backend; the Student Records API key is never sent to the browser.
+The backend supports student registration, sign-in, and self-service profile updates. Student credentials and profile requests are sent through the PHP backend; the Student Records API key is never sent to the browser.
 
 Set this additional private environment variable on the PHP host:
 
