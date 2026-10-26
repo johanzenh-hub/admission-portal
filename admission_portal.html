@@ -74,11 +74,8 @@ footer b{color:#fff;font-family:var(--serif);font-size:15px}
 .modal h3{font-family:var(--serif);color:var(--navy);margin:0 0 14px;font-size:22px}
 .field{margin-bottom:13px}.field label{display:block;font-size:13px;font-weight:600;margin-bottom:4px}
 .field input,.field textarea,.field select{width:100%;padding:10px;border:1px solid var(--border);border-radius:4px;font:inherit}
-.student-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}
-.student-fields .wide{grid-column:1/-1}
 .student-status{font-size:14px;margin:8px 0;min-height:1.5em}
-.student-status.success{color:#176b39}.student-status.error{color:var(--red)}
-@media(max-width:600px){.student-fields{grid-template-columns:1fr}.student-fields .wide{grid-column:auto}}
+.student-status.error{color:var(--red)}
 .err{color:var(--red);font-size:13px;margin-bottom:10px;min-height:1em}
 .row{display:flex;gap:10px;justify-content:flex-end;margin-top:6px}
 .staffbar{background:#fff7dd;border-bottom:1px solid var(--gold);display:none}
@@ -117,7 +114,7 @@ footer b{color:#fff;font-family:var(--serif);font-size:15px}
     <h2>Need student records or official documents?</h2>
     <p>Contact the Registrar for student records, grades, and official documents.</p>
   </div>
-  <a class="btn btn-gold" id="registrarBtn" href="#registrar">Go to Registrar &rarr;</a>
+  <a class="btn btn-gold" id="registrarBtn" href="https://it-department-hub.onrender.com">Go to Registrar &rarr;</a>
 </div></section>
 
 <section class="block" id="news" role="tabpanel" aria-labelledby="newsTab" tabindex="0">
@@ -151,57 +148,8 @@ footer b{color:#fff;font-family:var(--serif);font-size:15px}
 
 <section class="block" id="registrar" role="tabpanel" aria-labelledby="registrarTab" tabindex="0" hidden><div class="wrap">
   <div class="rule"><h3>Registrar</h3></div>
-  <p>Register for a student account or sign in to review and update your own information.</p>
-  <div class="grid" id="studentAccessPanels">
-    <section class="box">
-      <h4>New student registration</h4>
-      <p>Student numbers are assigned automatically. Passwords are sent securely to the Student Records service.</p>
-      <form id="studentRegisterForm">
-        <div class="student-fields">
-          <div class="field wide"><label for="registerName">Full name</label><input id="registerName" name="full_name" autocomplete="name" maxlength="120" required></div>
-          <div class="field"><label for="registerContact">Contact number</label><input id="registerContact" name="contact_number" autocomplete="tel" maxlength="40"></div>
-          <div class="field"><label for="registerEmail">Email</label><input id="registerEmail" name="email" type="email" autocomplete="email" maxlength="254" required></div>
-          <div class="field wide"><label for="registerAddress">Address</label><input id="registerAddress" name="address" autocomplete="street-address" maxlength="500"></div>
-          <div class="field"><label for="registerYear">Year level</label><select id="registerYear" name="year_level" required><option value="">Choose a year</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select></div>
-          <div class="field"><label for="registerSection">Section</label><input id="registerSection" name="section" maxlength="40"></div>
-          <div class="field"><label for="registerStatus">Enrollment status</label><select id="registerStatus" name="enrollment_status" required><option value="not-enrolled">Not enrolled</option><option value="enrolled">Enrolled</option><option value="irregular">Irregular</option></select></div>
-          <div class="field"><label for="registerPassword">Password</label><input id="registerPassword" name="password" type="password" minlength="6" autocomplete="new-password" required></div>
-        </div>
-        <p class="student-status" id="studentRegisterStatus" role="status" aria-live="polite"></p>
-        <button class="btn btn-navy" type="submit">Create student account</button>
-      </form>
-    </section>
-    <section class="box">
-      <h4>Student sign in</h4>
-      <p>Use the student number and password you created during registration.</p>
-      <form id="studentLoginForm">
-        <div class="field"><label for="studentLoginId">Student number</label><input id="studentLoginId" name="student_id" placeholder="2026-00460" pattern="[0-9]{4}-[0-9]{5}" autocomplete="username" required></div>
-        <div class="field"><label for="studentLoginPassword">Password</label><input id="studentLoginPassword" name="password" type="password" autocomplete="current-password" required></div>
-        <p class="student-status" id="studentLoginStatus" role="status" aria-live="polite"></p>
-        <button class="btn btn-navy" type="submit">Sign in</button>
-      </form>
-    </section>
-  </div>
-  <section class="box" id="studentProfile" hidden>
-    <div class="row" style="justify-content:space-between;align-items:center">
-      <h4 id="studentProfileHeading" style="margin:0">Your profile</h4>
-      <button class="btn btn-ghost btn-sm" id="studentLogout" type="button">Sign out</button>
-    </div>
-    <p>Only your own profile can be viewed or updated here.</p>
-    <form id="studentProfileForm">
-      <div class="student-fields">
-        <div class="field wide"><label for="profileName">Full name</label><input id="profileName" name="full_name" maxlength="120" required></div>
-        <div class="field"><label for="profileContact">Contact number</label><input id="profileContact" name="contact_number" maxlength="40"></div>
-        <div class="field"><label for="profileEmail">Email</label><input id="profileEmail" name="email" type="email" maxlength="254" required></div>
-        <div class="field wide"><label for="profileAddress">Address</label><input id="profileAddress" name="address" maxlength="500"></div>
-        <div class="field"><label for="profileYear">Year level</label><select id="profileYear" name="year_level" required><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select></div>
-        <div class="field"><label for="profileSection">Section</label><input id="profileSection" name="section" maxlength="40"></div>
-        <div class="field"><label for="profileStatus">Enrollment status</label><select id="profileStatus" name="enrollment_status" required><option value="not-enrolled">Not enrolled</option><option value="enrolled">Enrolled</option><option value="irregular">Irregular</option></select></div>
-      </div>
-      <p class="student-status" id="studentProfileStatus" role="status" aria-live="polite"></p>
-      <button class="btn btn-navy" type="submit">Save profile</button>
-    </form>
-  </section>
+  <p>Student records and Registrar services are available through the Admin Hub.</p>
+  <a class="btn btn-navy" href="https://it-department-hub.onrender.com">Open Registrar / Admin Hub &rarr;</a>
   <section class="box" id="studentLookup" hidden style="margin-top:18px">
     <h4>Staff: look up students</h4>
     <form id="studentSearchForm">
@@ -243,20 +191,15 @@ footer b{color:#fff;font-family:var(--serif);font-size:15px}
 
 <script>
 /* ===== SETTINGS — edit this ===== */
-const REGISTRAR_URL = '#registrar';
+const REGISTRAR_URL = 'https://it-department-hub.onrender.com';
 /* ================================ */
 
 const API_BASE = window.ADMISSION_API_BASE || new URL('./backend', document.baseURI).href.replace(/\/$/, '');
 const SESSION_KEY = 'csfj_news_token_v1';
-const STUDENT_SESSION_KEY = 'csfj_student_session_v1';
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let token = null; try{ token = sessionStorage.getItem(SESSION_KEY); }catch(e){}
 let staff = !!token, editingId = null, news = [];
-let studentSession = null;
-try{ studentSession = JSON.parse(sessionStorage.getItem(STUDENT_SESSION_KEY) || 'null'); }catch(e){}
-let studentToken = studentSession?.token || null;
-let studentId = studentSession?.student_id || null;
 
 async function api(path, opt={}){
   const h = {};
@@ -268,21 +211,6 @@ async function api(path, opt={}){
   const d = await r.json().catch(()=>({}));
   if(r.status === 401 && token) logout(true);
   if(!r.ok) throw new Error(d.error || 'Server error (' + r.status + '). Make sure the PHP server is running, not Live Server.');
-  return d;
-}
-async function studentApi(path, opt={}){
-  const headers = {};
-  if(opt.body) headers['Content-Type'] = 'application/json';
-  if(studentToken) headers.Authorization = 'Bearer ' + studentToken;
-  let r;
-  try{ r = await fetch(API_BASE + '/students' + path, {...opt, headers}); }
-  catch(e){ throw new Error('Cannot reach the server. Start PHP from the project folder: php -S 127.0.0.1:8000 backend\\index.php'); }
-  const d = await r.json().catch(()=>({}));
-  if(r.status === 401 && studentToken){
-    clearStudentSession();
-    throw new Error(d.error || 'Your student session expired. Please sign in again.');
-  }
-  if(!r.ok) throw new Error(d.error || 'Student service error (' + r.status + ').');
   return d;
 }
 const fmt = d => { const t = new Date(String(d).slice(0,10)+'T00:00:00'); return isNaN(t) ? '' : t.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}); };
@@ -382,90 +310,6 @@ function studentStatus(id, message, type=''){
   el.textContent = message;
   el.className = 'student-status' + (type ? ' ' + type : '');
 }
-function renderStudentSession(){
-  const signedIn = !!(studentToken && studentId);
-  $('studentAccessPanels').hidden = signedIn;
-  $('studentProfile').hidden = !signedIn;
-}
-function clearStudentSession(){
-  studentToken = null; studentId = null; studentSession = null;
-  try{ sessionStorage.removeItem(STUDENT_SESSION_KEY); }catch(e){}
-  renderStudentSession();
-}
-async function loadStudentProfile(){
-  if(!studentToken || !studentId) return;
-  const d = await studentApi('/' + encodeURIComponent(studentId) + '/full');
-  const s = d.student;
-  if(!s || s.student_id !== studentId) throw new Error('The student service returned an invalid profile.');
-  $('studentProfileHeading').textContent = 'Your profile — ' + studentId;
-  $('profileName').value = s.full_name || '';
-  $('profileContact').value = s.contact_number || '';
-  $('profileEmail').value = s.email || '';
-  $('profileAddress').value = s.address || '';
-  $('profileYear').value = String(s.year_level || '');
-  $('profileSection').value = s.section || '';
-  $('profileStatus').value = s.enrollment_status || '';
-  studentStatus('studentProfileStatus', '');
-}
-
-$('studentRegisterForm').addEventListener('submit', async event => {
-  event.preventDefault();
-  const form = event.currentTarget, button = form.querySelector('button[type="submit"]');
-  button.disabled = true;
-  studentStatus('studentRegisterStatus', 'Creating your student account…');
-  const fields = Object.fromEntries(new FormData(form).entries());
-  fields.year_level = Number(fields.year_level);
-  try{
-    const d = await studentApi('/register', {method:'POST', body:JSON.stringify(fields)});
-    studentStatus('studentRegisterStatus', 'Registration complete. Your student number is ' + d.student_id + '. Sign in below to continue.', 'success');
-    $('studentLoginId').value = d.student_id;
-    form.reset();
-  }catch(e){
-    studentStatus('studentRegisterStatus', e.message, 'error');
-  }finally{
-    button.disabled = false;
-  }
-});
-
-$('studentLoginForm').addEventListener('submit', async event => {
-  event.preventDefault();
-  const form = event.currentTarget, button = form.querySelector('button[type="submit"]');
-  button.disabled = true;
-  studentStatus('studentLoginStatus', 'Signing in…');
-  const fields = Object.fromEntries(new FormData(form).entries());
-  try{
-    const d = await studentApi('/login', {method:'POST', body:JSON.stringify(fields)});
-    studentToken = d.token; studentId = d.student_id;
-    studentSession = {token:studentToken, student_id:studentId};
-    try{ sessionStorage.setItem(STUDENT_SESSION_KEY, JSON.stringify(studentSession)); }catch(e){}
-    renderStudentSession();
-    await loadStudentProfile();
-    form.reset();
-  }catch(e){
-    studentStatus('studentLoginStatus', e.message, 'error');
-  }finally{
-    button.disabled = false;
-  }
-});
-
-$('studentProfileForm').addEventListener('submit', async event => {
-  event.preventDefault();
-  const form = event.currentTarget, button = form.querySelector('button[type="submit"]');
-  button.disabled = true;
-  studentStatus('studentProfileStatus', 'Saving your changes…');
-  const fields = Object.fromEntries(new FormData(form).entries());
-  fields.year_level = Number(fields.year_level);
-  try{
-    await studentApi('/' + encodeURIComponent(studentId), {method:'PUT', body:JSON.stringify(fields)});
-    studentStatus('studentProfileStatus', 'Your information was updated.', 'success');
-  }catch(e){
-    studentStatus('studentProfileStatus', e.message, 'error');
-  }finally{
-    button.disabled = false;
-  }
-});
-$('studentLogout').onclick = () => clearStudentSession();
-
 $('studentSearchForm').addEventListener('submit', async event => {
   event.preventDefault();
   const query = $('studentSearchQuery').value.trim();
@@ -512,17 +356,7 @@ document.querySelectorAll('[role="tab"]').forEach(tab => {
   });
 });
 $('registrarBtn').href = REGISTRAR_URL;
-$('registrarBtn').addEventListener('click', event => {
-  if(REGISTRAR_URL === '#registrar'){
-    event.preventDefault();
-    activateTab($('registrarTab'));
-  }
-});
 $('today').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-renderStudentSession();
-if(studentToken && studentId){
-  loadStudentProfile().catch(e => studentStatus('studentProfileStatus', e.message, 'error'));
-}
 loadNews();
 </script>
 </body>
