@@ -13,7 +13,7 @@ RUN apt-get update \
 WORKDIR /var/www/html
 COPY . /var/www/html
 COPY docker/start.sh /usr/local/bin/start-admission-portal
-RUN chmod +x /usr/local/bin/start-admission-portal
+RUN sed -i 's/\r$//' /usr/local/bin/start-admission-portal
 
 EXPOSE 10000
-CMD ["/usr/local/bin/start-admission-portal"]
+CMD ["sh", "/usr/local/bin/start-admission-portal"]
